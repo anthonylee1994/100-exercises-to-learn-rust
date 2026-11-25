@@ -10,6 +10,12 @@ pub struct TicketStore {
     tickets: Vec<Ticket>,
 }
 
+impl TicketStore {
+    pub fn iter(&self) -> std::slice::Iter<'_, Ticket> {
+        self.tickets.iter()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Ticket {
     title: TicketTitle,
@@ -33,6 +39,12 @@ impl TicketStore {
 
     pub fn add_ticket(&mut self, ticket: Ticket) {
         self.tickets.push(ticket);
+    }
+}
+
+impl Default for TicketStore {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
