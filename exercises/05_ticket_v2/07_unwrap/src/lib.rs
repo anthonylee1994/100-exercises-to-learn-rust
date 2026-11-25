@@ -1,19 +1,27 @@
 // TODO: `easy_ticket` should panic when the title is invalid.
 //   When the description is invalid, instead, it should use a default description:
 //   "Description not provided".
-fn easy_ticket(title: String, description: String, status: Status) -> Ticket {
-    todo!()
+pub fn easy_ticket(title: String, description: String, status: Status) -> Ticket {
+    match Ticket::new(title.clone(), description, status.clone()) {
+        Ok(ticket) => ticket,
+        Err(err) => {
+            if err == "Title cannot be empty" || err == "Title cannot be longer than 50 bytes" {
+                panic!("{err}");
+            }
+            Ticket::new(title, "Description not provided".to_string(), status).unwrap()
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-struct Ticket {
+pub struct Ticket {
     title: String,
     description: String,
     status: Status,
 }
 
 #[derive(Debug, PartialEq, Clone)]
-enum Status {
+pub enum Status {
     ToDo,
     InProgress { assigned_to: String },
     Done,
@@ -27,9 +35,11 @@ impl Ticket {
         if title.len() > 50 {
             return Err("Title cannot be longer than 50 bytes".to_string());
         }
+
         if description.is_empty() {
-            return Err("Description cannot be empty".to_string());
+            return Err("Description not provided".to_string());
         }
+
         if description.len() > 500 {
             return Err("Description cannot be longer than 500 bytes".to_string());
         }
